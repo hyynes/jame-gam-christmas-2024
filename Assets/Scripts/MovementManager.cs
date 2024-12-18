@@ -27,7 +27,7 @@ public class MovementManager : MonoBehaviour
     private float gravityScaleBeforeAcceleration;
 
     // bools
-    public bool bIsGrounded;
+    private bool isGrounded;
     private bool isFacingRight = true;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -49,7 +49,7 @@ public class MovementManager : MonoBehaviour
     private void FixedUpdate()
     {
         // falling
-        if (body.linearVelocity.y <= velocityThresholdBeforeFalling && !bIsGrounded)
+        if (body.linearVelocity.y <= velocityThresholdBeforeFalling && !isGrounded)
         {
             body.gravityScale += fallingGravityAcceleration;
             body.gravityScale = Mathf.Clamp(body.gravityScale, 0, maxFallingAcceleration);
@@ -78,7 +78,7 @@ public class MovementManager : MonoBehaviour
         body.linearVelocity = new Vector2(horizontalDirection * speed, body.linearVelocity.y);
         
         // jump action; if the player is grounded, then the player can jump - otherwise, they cannot
-        if (Input.GetKeyDown(jumpKey) && bIsGrounded)
+        if (Input.GetKeyDown(jumpKey) && isGrounded)
         {
             body.AddForce(new Vector2(0, jumpSpeed), ForceMode2D.Impulse); 
         }
@@ -89,22 +89,21 @@ public class MovementManager : MonoBehaviour
             Flip();
         }
     }
-    
+
     // update whether the player is on the ground or not; if they are, then reset the jump 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Check if player is on the ground
         if (collision.gameObject.CompareTag("Ground"))
         {
-            bIsGrounded = true;
+            isGrounded = true;
         }
     }
-    private void OnTriggerExit2D(Collider2D collision)
+    
+    private void OnCollisionExit2D(Collision2D collision)
     {
-        // Check if player leaves the ground
         if (collision.gameObject.CompareTag("Ground"))
         {
-            bIsGrounded = false;
+            isGrounded = false;
         }
     }
     

@@ -15,6 +15,12 @@ public class CandyCaneBehaviourManager : MonoBehaviour
     // Start is called once before he first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        // if i don't exist, create me
+        if (instance == null)
+        {
+            instance = this;
+        }
+        
         allInteractables = FindObjectsByType<CandyCaneObject>(FindObjectsSortMode.None);
     }
 

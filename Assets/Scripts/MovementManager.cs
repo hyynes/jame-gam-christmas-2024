@@ -60,6 +60,7 @@ public class MovementManager : MonoBehaviour
         }
     }
     
+
     // Update is called once per frame
     void Update()
     {
@@ -75,8 +76,18 @@ public class MovementManager : MonoBehaviour
         
         // horizontal movement; multiply the horizontal direction with the speed set in the inspector
         float horizontalDirection = Input.GetAxis("Horizontal");
-        body.linearVelocity = new Vector2(horizontalDirection * speed, body.linearVelocity.y);
-        
+        if (Mathf.Abs(horizontalDirection) > 0.01f)
+        {
+            // Target velocity based on input
+            float targetHorizontalVelocity = horizontalDirection * speed;
+
+            // Gradually approach the target velocity
+            float smoothFactor = 10f; // Adjust for desired responsiveness
+            float newHorizontalVelocity = Mathf.Lerp(body.linearVelocity.x, targetHorizontalVelocity, Time.deltaTime * smoothFactor);
+
+            // Apply the new velocity to the rigid body
+            body.linearVelocity = new Vector2(newHorizontalVelocity, body.linearVelocity.y);
+        }
         // jump action; if the player is grounded, then the player can jump - otherwise, they cannot
         if (Input.GetKeyDown(jumpKey) && isGrounded)
         {
@@ -84,7 +95,7 @@ public class MovementManager : MonoBehaviour
         }
         
         // sprite flips (if horizontal direction changes)
-        if (horizontalDirection < 0 && isFacingRight || horizontalDirection > 0 && !isFacingRight)
+        if (body.linearVelocityX < 0 && isFacingRight || body.linearVelocityX > 0 && !isFacingRight)
         {
             Flip();
         }
@@ -114,5 +125,6 @@ public class MovementManager : MonoBehaviour
         
         // check direction character is facing, then rotate accordingly
         transform.eulerAngles = new Vector3(0, isFacingRight ? 0 : 180, 0);
+        
     }
 }

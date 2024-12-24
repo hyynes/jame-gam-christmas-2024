@@ -98,7 +98,7 @@ public class Newsc : MonoBehaviour
         if (fixedJoint.enabled == true)
         {
             playerRigidbody.freezeRotation = false;
-            transform.Rotate(0, 0, 2);
+            transform.Rotate(0, 0, 1.5f);
         }
     }
 

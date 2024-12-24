@@ -20,6 +20,8 @@ public class MovementManager : MonoBehaviour
     [Header("Key Codes")] 
     [SerializeField] private KeyCode jumpKey = KeyCode.Space;
     [SerializeField] private KeyCode sprintKey = KeyCode.LeftShift;
+
+    public Animator animator;
     
     // accessors
     private Rigidbody2D body;
@@ -78,6 +80,7 @@ public class MovementManager : MonoBehaviour
         float horizontalDirection = Input.GetAxis("Horizontal");
         if (Mathf.Abs(horizontalDirection) > 0.01f)
         {
+            animator.SetFloat("Speed", 1);
             // Target velocity based on input
             float targetHorizontalVelocity = horizontalDirection * speed;
 
@@ -87,6 +90,10 @@ public class MovementManager : MonoBehaviour
 
             // Apply the new velocity to the rigid body
             body.linearVelocity = new Vector2(newHorizontalVelocity, body.linearVelocity.y);
+        }
+        else
+        {
+            animator.SetFloat("Speed", 0);
         }
         // jump action; if the player is grounded, then the player can jump - otherwise, they cannot
         if (Input.GetKeyDown(jumpKey) && isGrounded)
